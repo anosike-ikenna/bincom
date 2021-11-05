@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="UTF-8">
+        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+        <title>Bincom - Question Three</title>
+
+        <!-- Favicon-->
+        <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
+
+        <!-- Google Fonts -->
+        <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+
+        <!-- Bootstrap Core Css -->
+        <link href="/static/plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
+
+        <!-- Multi Select Css -->
+        <link href="/static/plugins/multi-select/css/multi-select.css" rel="stylesheet">
+
+        <!-- Bootstrap Spinner Css -->
+        <link href="/static/plugins/jquery-spinner/css/bootstrap-spinner.css" rel="stylesheet">
+
+        <!-- Bootstrap Tagsinput Css -->
+        <link href="/static/plugins/bootstrap-tagsinput/bootstrap-tagsinput.css" rel="stylesheet">
+
+        <!-- Bootstrap Select Css -->
+        <link href="/static/plugins/bootstrap-select/css/bootstrap-select.css" rel="stylesheet" />
+
+        <!-- noUISlider Css -->
+        <link href="/static/plugins/nouislider/nouislider.min.css" rel="stylesheet" />
+
+        <!-- JQuery DataTable Css -->
+        <link href="/static/plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.css" rel="stylesheet">
+
+        <!-- Custom Css -->
+        <link href="/static/css/style.css" rel="stylesheet">
+
+        <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+        <link href="/static/css/themes/all-themes.css" rel="stylesheet" />
+        <style>
+            .custom-input {
+                border: 1px solid #b9b9b9;
+                border-radius: 5px;
+            }
+            .custom-input-label {
+                width: 100px;
+            }
+            .custom-h3 {
+                font-size: 20px;
+            }
+            .custom-submit-btn {
+                background-color: rgb(59, 79, 255);
+                color: #fff;
+                border: 1px solid rgb(59, 79, 255);
+                border-radius: 5px;
+                padding: 5px 20px;
+                margin-top: 10px;
+            }
+            .custom-submit-btn:hover {
+                background-color: rgb(44, 60, 206);
+            }
+        </style>
+    </head>
+
+    <body>
+        <div style="display: flex; flex-flow: row nowrap; font-size: 25px;">
+            <ul style="display: flex; flex-flow: row nowrap; width: 100%; list-style: none;">
+                <li style="margin-left: -20px;">
+                    <a href="{% url 'question_one' %}">Question One</a>
+                </li>
+                <li style="margin-left: 20px;">
+                    <a href="{% url 'question_two' %}">Question Two</a>
+                </li>
+                <li style="margin-left: 20px;">
+                    <a href="{% url 'question_three' %}">Question Three</a>
+                </li>
+            </ul>
+        </div>
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="body">
+                        <h2 class="m-b-30">Add Party Results to an Existing Polling Unit</h2>
+                        <div class="row clearfix">
+                            <div class="col-md-3">
+                                <p>
+                                    <b>Select State</b>
+                                </p>
+                                <select id="state" class="form-control show-tick" data-live-search="true">
+                                    {% for state in states %}
+                                        <option class="m-l-20" value="{{ state.state_id }}">{{ state }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div id="lga" class="col-md-3">
+                                <p>
+                                    <b>Select LGA</b>
+                                </p>
+                                {% if lgas %}
+                                <select id="lga-select" class="form-control show-tick" data-live-search="true">
+                                    <option value="">-----Select an option-----</option>
+                                    {% for lga in lgas %}
+                                        <option class="m-l-20 lga-el" value="{{ lga.lga_id }}">{{ lga }}</option>
+                                    {% endfor %}
+                                </select>
+                                {% else %}
+                                    <select disabled class="form-control show-tick" data-live-search="true">
+                                        <option class="m-l-20">No lgas available</option>
+                                    </select>
+                                {% endif %}
+                            </div>
+                            <div id="ward" class="col-md-3" style="display: none;">
+                                <p>
+                                    <b>Select Ward</b>
+                                </p>
+                                {% if wards %}
+                                <select id="ward-select" class="form-control show-tick ward-select" data-live-search="true">
+                                    <option value="">-----Select an option-----</option>
+                                    {% for ward in wards %}
+                                        <option class="m-l-20 ward-option" value="{{ ward.uniqueid }}">{{ ward }}</option>
+                                    {% endfor %}
+                                </select>
+                                {% else %}
+                                    <select id="ward-select" disabled class="form-control show-tick ward-select" data-live-search="true">
+                                        <option class="m-l-20">No wards available</option>
+                                    </select>
+                                {% endif %}
+                            </div>
+                            <div id="pu" class="col-md-3" style="display: none;">
+                                <p>
+                                    <b>Polling Unit</b>
+                                </p>
+                                {% if polling_units %}
+                                    <select id="pu-select" class="form-control" data-live-search="true">
+                                        <!-- <option value="">-----Select an option-----</option> -->
+                                        {% for polling_unit in polling_units %}
+                                            <option class="m-l-20" value="{{ polling_unit.uniqueid }}">{{ polling_unit }}</option>
+                                        {% endfor %}
+                                    </select><br>
+                                {% else %}
+                                    <select id="pu-select" disabled class="form-control show-tick" data-live-search="true">
+                                        <option class="m-l-20">No polling unit available</option>
+                                    </select>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="row clearfix m-l-5">
+                            <form action="." method="POST">
+                                {% csrf_token %}
+                                <h3 class="custom-h3">User Details</h3>
+                                <label class="custom-input-label" for="user_name">User Name:</label>
+                                <input class="custom-input" type="text" name="user_name" id="user_name" required><br>
+                                <label class="custom-input-label" for="user_ip">User IP:</label>
+                                <input class="custom-input" type="text" name="user_ip" id="user_ip" required>
+                                <h3 class="custom-h3">Party Scores</h3>
+                                {% for party in parties %}
+                                    <label class="custom-input-label" for="{{ party.id }}">{{ party }}</label>
+                                    <input class="custom-input" type="number" name="{{ party.id }}" id="{{ party.id }}" required placeholder="score"><br>
+                                {% endfor %}
+                                <input type="hidden" name="uniqueid" id="hidden_field">
+                                <button class="custom-submit-btn" type="submit" id="submit-btn">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+            <!-- Jquery Core Js -->
+    <script src="/static/plugins/jquery/jquery.min.js"></script>
+
+    <!-- Bootstrap Core Js -->
+    <script src="/static/plugins/bootstrap/js/bootstrap.js"></script>
+
+    <!-- Select Plugin Js -->
+    <!-- <script src="/static/plugins/bootstrap-select/js/bootstrap-select.js"></script> -->
+
+    <!-- Slimscroll Plugin Js -->
+    <script src="/static/plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
+
+    <!-- Input Mask Plugin Js -->
+    <script src="/static/plugins/jquery-inputmask/jquery.inputmask.bundle.js"></script>
+
+    <!-- Multi Select Plugin Js -->
+    <script src="/static/plugins/multi-select/js/jquery.multi-select.js"></script>
+
+    <!-- Bootstrap Tags Input Plugin Js -->
+    <script src="/static/plugins/bootstrap-tagsinput/bootstrap-tagsinput.js"></script>
+
+    <!-- Waves Effect Plugin Js -->
+    <script src="/static/plugins/node-waves/waves.js"></script>
+
+    <!-- Demo Js -->
+    <script src="/static/js/demo.js"></script>
+
+    <script src="/static/js/q3.js"></script>
+    </body>
+
+</html>
